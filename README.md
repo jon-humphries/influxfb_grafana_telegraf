@@ -8,7 +8,7 @@ Telegraf is configured to send pings to three public URLS, then store those resp
 
 All networking is created locally, to access InfluxDB run http://127.0.0.1:8086 (admin/CiscoDisco123) for Grafana http://127.0.0.1:3000 (admin/admin - then set a new password)
 
-All varibales for the docker compose file, telegraf config and any automated provisioning for Grafana are set within the .env file and alled with the syntax ${variable}
+All variables for the docker compose file, telegraf config and any automated provisioning for Grafana are set within the .env file and alled with the syntax ${variable}
 
 The connection between Grafana and influxdb is automated.
 
