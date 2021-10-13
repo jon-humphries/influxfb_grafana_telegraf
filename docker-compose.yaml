@@ -1,0 +1,70 @@
+version: "3"
+services:
+  grafana:
+    container_name: ${GRAFANA_HOST}
+    restart: always
+    image: grafana/grafana
+    ports:
+      - ${GRAFANA_PORT}:${GRAFANA_PORT}
+    deploy:
+      restart_policy:
+        condition: on-failure
+    user: "0"
+    environment:
+      - TZ=Europe/London
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_INSTALL_IMAGE_RENDERER_PLUGIN=true
+    env_file:
+      - .env
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - newnet
+  influxdb:
+    container_name: ${INFLUX_HOST}
+    restart: always
+    image: influxdb:latest
+    ports:
+      - ${INFLUX_PORT}:${INFLUX_PORT}
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ./influxdb/:/root/.influxdbv2
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:rw
+    environment:
+      - TZ=Europe/London
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUX_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUX_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUX_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUX_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUX_TOKEN}
+    env_file:
+      - .env
+    networks:
+      - newnet
+  telegraf:
+      image: telegraf
+      container_name: ${TELEGRAF_HOST}
+      restart: always
+      environment:
+        HOST_PROC: /rootfs/proc
+        HOST_SYS: /rootfs/sys
+        HOST_ETC: /rootfs/etc
+      env_file:
+        - .env
+      volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+      - ./v2:/root/.snmp/mibs
+      networks:
+        - newnet
+networks:
+  newnet:
+    

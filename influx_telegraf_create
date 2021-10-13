@@ -1,0 +1,4 @@
+influx telegrafs create \
+  -n "Meraki Telegraf config" \
+  -d "Meraki Monitor Telegraf configuration." \
+  -f /etc/telegraf/telegraf.conf
