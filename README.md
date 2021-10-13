@@ -12,6 +12,10 @@ All varibales for the docker compose file, telegraf config and any automated pro
 
 The connection between Grafana and influxdb is automated.
 
+There are two folders for Grafana provisioning and their are default.taml files for both provisioning automation and for dashboard config. If you wish to add a default dashboard add it to the grafana/dashboards folder.
+ 
+
+If you wish to use Telegraf as a collector agent for InfluxDB then following the below, otherwise you can skip this and populate InfluxDB using your own methods.
 
 To create the telegraf config in influxdb this is a manual step and is done via the influxdb container:-
 
@@ -21,6 +25,5 @@ influx telegrafs create \
   -d "Meraki Monitor Telegraf configuration." \
   -f /etc/telegraf/telegraf.conf
   
- There are two folders for Grafana provisioning and their are default.taml files for both provisioning automation and for dashboard config. If you wish to add a default dashboard add it to the grafana/dashboards folder.
- 
+
  
